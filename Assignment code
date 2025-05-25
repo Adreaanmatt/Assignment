@@ -1,0 +1,94 @@
+>>> tesla_data.reset_index(inplace=True)
+>>> tesla_data.head()
+                       Date      Open      High       Low     Close     Volume  Dividends  Stock Splits
+0 2010-06-29 00:00:00-04:00  1.266667  1.666667  1.169333  1.592667  281494500        0.0           0.0
+1 2010-06-30 00:00:00-04:00  1.719333  2.028000  1.553333  1.588667  257806500        0.0           0.0
+2 2010-07-01 00:00:00-04:00  1.666667  1.728000  1.351333  1.464000  123282000        0.0           0.0
+3 2010-07-02 00:00:00-04:00  1.533333  1.540000  1.247333  1.280000   77097000        0.0           0.0
+4 2010-07-06 00:00:00-04:00  1.333333  1.333333  1.055333  1.074000  103003500        0.0           0.0
+>>> url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/revenue.htm"
+>>> html_data  = requests.get(url).text
+>>> soup = BeautifulSoup(html_data, 'html.parser')
+>>> tesla_revenue = pd.DataFrame(columns=["Date", "Revenue"])
+>>> read_html_pandas_data = pd.read_html(url)
+>>> tesla_revenue = read_html_pandas_data[1]
+>>> tesla_revenue.tail()
+   Tesla Quarterly Revenue (Millions of US $) Tesla Quarterly Revenue (Millions of US $).1
+49                                 2010-06-30                                          $28
+50                                 2010-03-31                                          $21
+51                                 2009-12-31                                          NaN
+52                                 2009-09-30                                          $46
+53                                 2009-06-30                                          $27
+>>> gamestop = yf.Ticker("GME")
+>>> gamestop_data = gamestop.history(period="max")
+>>> gamestop_data.reset_index(inplace=True)
+>>> gamestop_data.head()
+                       Date      Open      High       Low     Close    Volume  Dividends  Stock Splits
+0 2002-02-13 00:00:00-05:00  1.620129  1.693350  1.603296  1.691667  76216000        0.0           0.0
+1 2002-02-14 00:00:00-05:00  1.712707  1.716074  1.670626  1.683251  11021600        0.0           0.0
+2 2002-02-15 00:00:00-05:00  1.683250  1.687458  1.658002  1.674834   8389600        0.0           0.0
+3 2002-02-19 00:00:00-05:00  1.666418  1.666418  1.578047  1.607504   7410400        0.0           0.0
+4 2002-02-20 00:00:00-05:00  1.615920  1.662209  1.603296  1.662209   6892800        0.0           0.0
+>>> url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/stock.html"
+>>> html_data_2  = requests.get(url).text
+>>> soup = BeautifulSoup(html_data_2, 'html.parser')
+>>> gme_revenue = pd.DataFrame(columns=["Date", "Revenue"])
+>>> read_html_pandas_data = pd.read_html(url)
+>>> gme_revenue = read_html_pandas_data[1]
+>>> gme_revenue.tail()
+   GameStop Quarterly Revenue (Millions of US $) GameStop Quarterly Revenue (Millions of US $).1
+57                                    2006-01-31                                          $1,667
+58                                    2005-10-31                                            $534
+59                                    2005-07-31                                            $416
+60                                    2005-04-30                                            $475
+61                                    2005-01-31                                            $709
+>>> def make_graph(stock_data, revenue_data, stock):
+...     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, subplot_titles=("Historical Share Price", "Historical Revenue"), vertical_spacing = .3)
+...     stock_data_specific = stock_data[stock_data.Date <= '2021-06-14']
+...     revenue_data_specific = revenue_data[revenue_data.Date <= '2021-04-30']
+...     fig.add_trace(go.Scatter(x=pd.to_datetime(stock_data_specific.Date, infer_datetime_format=True), y=stock_data_specific.Close.astype("float"), name="Share Price"), row=1, col=1)
+...     fig.add_trace(go.Scatter(x=pd.to_datetime(revenue_data_specific.Date, infer_datetime_format=True), y=revenue_data_specific.Revenue.astype("float"), name="Revenue"), row=2, col=1)
+...     fig.update_xaxes(title_text="Date", row=1, col=1)
+...     fig.update_xaxes(title_text="Date", row=2, col=1)
+...     fig.update_yaxes(title_text="Price ($US)", row=1, col=1)
+...     fig.update_yaxes(title_text="Revenue ($US Millions)", row=2, col=1)
+...     fig.update_layout(showlegend=False,
+...     height=900,
+...     title=stock,
+...     xaxis_rangeslider_visible=True)
+...     fig.show()
+...     from IPython.display import display, HTML
+...     fig_html = fig.to_html()
+...     display(HTML(fig_html))
+...
+>>> make_graph(tesla_data, tesla_revenue, 'Tesla')
+Traceback (most recent call last):
+  File "<python-input-235>", line 1, in <module>
+    make_graph(tesla_data, tesla_revenue, 'Tesla')
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python-input-234>", line 4, in make_graph
+    revenue_data_specific = revenue_data[revenue_data.Date <= '2021-04-30']
+                                         ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Adreaan\AppData\Local\Programs\Python\Python313\Lib\site-packages\pandas\core\generic.py", line 6299, in __getattr__
+    return object.__getattribute__(self, name)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AttributeError: 'DataFrame' object has no attribute 'Date'
+>>> make_graph(gme_data, gme_revenue, 'GameStop')
+Traceback (most recent call last):
+  File "<python-input-236>", line 1, in <module>
+    make_graph(gme_data, gme_revenue, 'GameStop')
+               ^^^^^^^^
+NameError: name 'gme_data' is not defined. Did you mean: 'html_data'?
+>>> make_graph(gamestop_data, gme_revenue, 'GameStop')
+Traceback (most recent call last):
+  File "<python-input-237>", line 1, in <module>
+    make_graph(gamestop_data, gme_revenue, 'GameStop')
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python-input-234>", line 4, in make_graph
+    revenue_data_specific = revenue_data[revenue_data.Date <= '2021-04-30']
+                                         ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Adreaan\AppData\Local\Programs\Python\Python313\Lib\site-packages\pandas\core\generic.py", line 6299, in __getattr__
+    return object.__getattribute__(self, name)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AttributeError: 'DataFrame' object has no attribute 'Date'
+>>>
