@@ -92,3 +92,277 @@ Traceback (most recent call last):
            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
 AttributeError: 'DataFrame' object has no attribute 'Date'
 >>>
+>>> import yfinance as yf
+>>> import pandas as pd
+>>> import matplotlib.pyplot as plt
+>>> import matplotlib.gridspec as gridspec
+>>> import re
+>>> from io import StringIO
+>>> tesla_data = yf.Ticker("TSLA").history(period="max").reset_index()
+>>> tesla_data['Date'] = pd.to_datetime(tesla_data['Date'])
+... |2021-09-30|$13,757|
+... |2021-06-30|$11,958|
+... |2021-03-31|$10,389|
+... |2020-12-31|$10,744|
+... |2020-09-30|$8,771|
+... |2020-06-30|$6,036|
+... |2020-03-31|$5,985|
+... |2019-12-31|$7,384|
+... |2019-09-30|$6,303|
+... |2019-06-30|$6,350|
+... |2019-03-31|$4,541|
+... |2018-12-31|$7,226|
+... |2018-09-30|$6,824|
+... |2018-06-30|$4,002|
+... |2018-03-31|$3,409|
+... |2017-12-31|$3,288|
+... |2017-09-30|$2,985|
+... |2017-06-30|$2,790|
+... |2017-03-31|$2,696|
+... |2016-12-31|$2,285|
+... |2016-09-30|$2,298|
+... |2016-06-30|$1,270|
+... |2016-03-31|$1,147|
+... |2015-12-31|$1,214|
+... |2015-09-30|$937|
+... |2015-06-30|$955|
+... |2015-03-31|$940|
+... |2014-12-31|$957|
+... |2014-09-30|$852|
+... |2014-06-30|$769|
+... |2014-03-31|$621|
+... |2013-12-31|$615|
+... |2013-09-30|$431|
+... |2013-06-30|$405|
+... |2013-03-31|$562|
+... |2012-12-31|$306|
+... |2012-09-30|$50|
+... |2012-06-30|$27|
+... |2012-03-31|$30|
+... |2011-12-31|$39|
+... |2011-09-30|$58|
+... |2011-06-30|$58|
+... |2011-03-31|$49|
+... |2010-12-31|$36|
+... |2010-09-30|$31|
+... |2010-06-30|$28|
+... |2010-03-31|$21|
+... |2009-12-31|--|
+... |2009-09-30|$46|
+... |2009-06-30|$27|
+... '''
+>>> revenue_df = pd.read_csv(StringIO(html_tesla), sep='|', skipinitialspace=True, skiprows=1, engine='python')
+>>> revenue_df = revenue_df[revenue_df['Revenue'].notnull() & (revenue_df['Revenue'] != '--') & (revenue_df['Revenue'] != "")]
+>>> revenue_df['Revenue'] = revenue_df['Revenue'].apply(lambda x: int(re.sub(r'[$,]', '', str(x))))
+>>> revenue_df['Date'] = pd.to_datetime(revenue_df['Date'])
+>>> revenue_df = revenue_df.sort_values('Date').reset_index(drop=True)
+>>> tesla_revenue = revenue_df
+>>> def plot_dashboard(stock_data, revenue_data, company_name):
+...         plt.style.use('seaborn-v0_8-darkgrid')
+...             fig = plt.figure(figsize=(14, 10))
+...                 gs = gridspec.GridSpec(3, 1, height_ratios=[1, 0.2, 1])
+...
+  File "<python-input-277>", line 3
+    fig = plt.figure(figsize=(14, 10))
+IndentationError: unexpected indent
+>>>     # Top: Share Price
+>>>     ax0 = plt.subplot(gs[0])
+  File "<python-input-279>", line 1
+    ax0 = plt.subplot(gs[0])
+IndentationError: unexpected indent
+>>>     ax0.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+  File "<python-input-280>", line 1
+    ax0.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+IndentationError: unexpected indent
+>>>     ax0.set_title("Historical Share Price", fontsize=16)
+  File "<python-input-281>", line 1
+    ax0.set_title("Historical Share Price", fontsize=16)
+IndentationError: unexpected indent
+>>>     ax0.set_ylabel("Price ($US)")
+  File "<python-input-282>", line 1
+    ax0.set_ylabel("Price ($US)")
+IndentationError: unexpected indent
+>>>     ax0.set_xticklabels([])
+  File "<python-input-283>", line 1
+    ax0.set_xticklabels([])
+IndentationError: unexpected indent
+>>>
+>>>     # Middle: Range Slider (duplicate price plot for effect)
+>>>     ax1 = plt.subplot(gs[1], sharex=ax0)
+  File "<python-input-286>", line 1
+    ax1 = plt.subplot(gs[1], sharex=ax0)
+IndentationError: unexpected indent
+>>>     ax1.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+  File "<python-input-287>", line 1
+    ax1.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+IndentationError: unexpected indent
+>>>     ax1.set_ylabel("")
+  File "<python-input-288>", line 1
+    ax1.set_ylabel("")
+IndentationError: unexpected indent
+>>>     ax1.set_yticklabels([])
+  File "<python-input-289>", line 1
+    ax1.set_yticklabels([])
+IndentationError: unexpected indent
+>>>     ax1.set_xticklabels([])
+  File "<python-input-290>", line 1
+    ax1.set_xticklabels([])
+IndentationError: unexpected indent
+>>>
+>>>     # Bottom: Revenue
+>>>     ax2 = plt.subplot(gs[2])
+  File "<python-input-293>", line 1
+    ax2 = plt.subplot(gs[2])
+IndentationError: unexpected indent
+>>>     ax2.plot(revenue_data['Date'], revenue_data['Revenue'], color='firebrick', linewidth=2)
+  File "<python-input-294>", line 1
+    ax2.plot(revenue_data['Date'], revenue_data['Revenue'], color='firebrick', linewidth=2)
+IndentationError: unexpected indent
+>>>     ax2.set_title("Historical Revenue", fontsize=16)
+  File "<python-input-295>", line 1
+    ax2.set_title("Historical Revenue", fontsize=16)
+IndentationError: unexpected indent
+>>>     ax2.set_xlabel("Date")
+  File "<python-input-296>", line 1
+    ax2.set_xlabel("Date")
+IndentationError: unexpected indent
+>>>     ax2.set_ylabel("Revenue ($US Millions)")
+  File "<python-input-297>", line 1
+    ax2.set_ylabel("Revenue ($US Millions)")
+IndentationError: unexpected indent
+>>>
+>>>
+>>>     fig.suptitle(company_name, fontsize=18, x=0.1, y=0.98, ha='left')
+  File "<python-input-300>", line 1
+    fig.suptitle(company_name, fontsize=18, x=0.1, y=0.98, ha='left')
+IndentationError: unexpected indent
+>>>     plt.tight_layout(rect=[0, 0, 1, 0.97])
+  File "<python-input-301>", line 1
+    plt.tight_layout(rect=[0, 0, 1, 0.97])
+IndentationError: unexpected indent
+>>>     plt.show()def plot_dashboard(stock_data, revenue_data, company_name):
+  File "<python-input-302>", line 1
+    plt.show()def plot_dashboard(stock_data, revenue_data, company_name):
+IndentationError: unexpected indent
+>>> def plot_dashboard(stock_data, revenue_data, company_name):
+...         plt.style.use('seaborn-v0_8-darkgrid')
+...         fig = plt.figure(figsize=(14, 10)
+...         gs = gridspec.GridSpec(3, 1, height_ratios=[1, 0.2, 1])
+...         ax0 = plt.subplot(gs[0])
+...         ax0.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+...         ax0.set_title("Historical Share Price", fontsize=16)
+...         ax0.set_ylabel("Price ($US)")
+...         ax0.set_xticklabels([])
+...         ax1 = plt.subplot(gs[1], sharex=ax0)
+...         ax1.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+...         ax1.set_ylabel("")
+...         ax1.set_yticklabels([])
+...         ax1.set_xticklabels([])
+...         ax2 = plt.subplot(gs[2])
+...         ax2.plot(revenue_data['Date'], revenue_data['Revenue'], color='firebrick', linewidth=2)
+...         ax2.set_title("Historical Revenue", fontsize=16)
+...         ax2.set_xlabel("Date")
+...         ax2.set_ylabel("Revenue ($US Millions)")
+...         fig.suptitle(company_name, fontsize=18, x=0.1, y=0.98, ha='left')
+...         plt.tight_layout(rect=[0, 0, 1, 0.97]
+...         plt.show()
+...
+  File "<python-input-303>", line 3
+    fig = plt.figure(figsize=(14, 10)
+                             ^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+>>> def plot_dashboard(stock_data, revenue_data, company_name):
+...         plt.style.use('seaborn-v0_8-darkgrid')
+...         fig = plt.figure(figsize=(14, 10))
+...         gs = gridspec.GridSpec(3, 1, height_ratios=[1, 0.2, 1])
+...         ax0 = plt.subplot(gs[0])
+...         ax0.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+...         ax0.set_title("Historical Share Price", fontsize=16)
+...         ax0.set_ylabel("Price ($US)")
+...         ax0.set_xticklabels([])
+...         ax1 = plt.subplot(gs[1], sharex=ax0)
+...         ax1.plot(stock_data['Date'], stock_data['Close'], color='blue', linewidth=1)
+...         ax1.set_ylabel("")
+...         ax1.set_yticklabels([])
+...         ax1.set_xticklabels([])
+...         ax2 = plt.subplot(gs[2])
+...         ax2.plot(revenue_data['Date'], revenue_data['Revenue'], color='firebrick', linewidth=2)
+...         ax2.set_title("Historical Revenue", fontsize=16)
+...         ax2.set_xlabel("Date")
+...         ax2.set_ylabel("Revenue ($US Millions)")
+...         fig.suptitle(company_name, fontsize=18, x=0.1, y=0.98, ha='left')
+...         plt.tight_layout(rect=[0, 0, 1, 0.97])
+...         plt.show()
+...
+>>> plot_dashboard(tesla_data, tesla_revenue, "Tesla")
+>>> gme_data = yf.Ticker("GME").history(period="max").reset_index()gme_data = yf.Ticker("GME").history(period="max").reset_index()
+  File "<python-input-306>", line 1
+    gme_data = yf.Ticker("GME").history(period="max").reset_index()gme_data = yf.Ticker("GME").history(period="max").reset_index()
+                                                                   ^^^^^^^^
+SyntaxError: invalid syntax
+>>> gme_data = yf.Ticker("GME").history(period="max").reset_index()gme_data = yf.Ticker("GME").history(period="max").reset_index()
+  File "<python-input-307>", line 1
+    gme_data = yf.Ticker("GME").history(period="max").reset_index()gme_data = yf.Ticker("GME").history(period="max").reset_index()
+                                                                   ^^^^^^^^
+SyntaxError: invalid syntax
+>>>
+>>> gme_data = yf.Ticker("GME").history(period="max").reset_index()
+>>> gme_data['Date'] = pd.to_datetime(gme_data['Date'])
+... |2021-04-30|$1,277|
+... |2021-01-31|$2,122|
+... |2020-10-31|$1,005|
+... |2020-07-31|$942|
+... |2020-04-30|$1,021|
+... |2020-01-31|$2,194|
+... |2019-10-31|$1,439|
+... |2019-07-31|$1,286|
+... |2019-04-30|$1,548|
+... |2019-01-31|$3,063|
+... |2018-10-31|$1,935|
+... |2018-07-31|$1,501|
+... |2018-04-30|$1,786|
+... |2018-01-31|$2,825|
+... |2017-10-31|$1,989|
+... |2017-07-31|$1,688|
+... |2017-04-30|$2,046|
+... |2017-01-31|$2,403|
+... |2016-10-31|$1,959|
+... |2016-07-31|$1,632|
+... |2016-04-30|$1,972|
+... |2016-01-31|$3,525|
+... |2015-10-31|$2,016|
+... |2015-07-31|$1,762|
+... |2015-04-30|$2,061|
+... |2015-01-31|$3,476|
+... |2014-10-31|$2,092|
+... |2014-07-31|$1,731|
+... |2014-04-30|$1,996|
+... |2014-01-31|$3,684|
+... |2013-10-31|$2,107|
+... |2013-07-31|$1,384|
+... |2013-04-30|$1,865|
+... |2013-01-31|$3,562|
+... |2012-10-31|$1,773|
+... |2012-07-31|$1,550|
+... |2012-04-30|$2,002|
+... |2012-01-31|$3,579|
+... |2011-10-31|$1,947|
+... |2011-07-31|$1,744|
+... |2011-04-30|$2,281|
+... |2011-01-31|$3,693|
+... |2010-10-31|$1,899|
+... |2010-07-31|$1,799|
+... |2010-04-30|$2,083|
+... |2010-01-31|$3,524|
+... |2009-10-31|$1,835|
+... |2009-07-31|$1,739|
+... |2009-04-30|$1,981|
+... |2009-01-31|$3,492|
+... '''
+>>> revenue_df_gme = pd.read_csv(StringIO(html_gme), sep='|', skipinitialspace=True, skiprows=1, engine='python')
+>>> revenue_df_gme = revenue_df_gme[revenue_df_gme['Revenue'].notnull() & (revenue_df_gme['Revenue'] != '--') & (revenue_df_gme['Revenue'] != "")]
+>>> revenue_df_gme['Revenue'] = revenue_df_gme['Revenue'].apply(lambda x: int(re.sub(r'[$,]', '', str(x))))
+>>> revenue_df_gme['Date'] = pd.to_datetime(revenue_df_gme['Date'])
+>>> revenue_df_gme = revenue_df_gme.sort_values('Date').reset_index(drop=True)
+>>> gme_revenue = revenue_df_gme
+>>> plot_dashboard(gme_data, gme_revenue, "GameStop")
